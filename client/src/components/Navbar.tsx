@@ -4,7 +4,7 @@ import React from 'react'
 
 const Navbar = () => {
     return (
-        <div className='bg-white/20 w-full backdrop-blur-sm fixed flex justify-between px-20 py-5'>
+        <div className='bg-white/20 w-full backdrop-blur-sm fixed z-50 flex justify-between px-20 py-5'>
             <Link
                 href="/"
             >
