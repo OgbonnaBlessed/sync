@@ -2,6 +2,7 @@ import React from 'react'
 import HeroSection from './HeroSection'
 import KeyBenefits from './KeyBenefits'
 import Testimonials from './Testimonials'
+import Brands from './Brands'
 
 const page = () => {
     return (
@@ -9,6 +10,7 @@ const page = () => {
             <HeroSection />
             <KeyBenefits />
             <Testimonials />
+            <Brands />
         </div>
     )
 }
