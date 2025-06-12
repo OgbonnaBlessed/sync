@@ -3,6 +3,7 @@ import HeroSection from './HeroSection'
 import KeyBenefits from './KeyBenefits'
 import Testimonials from './Testimonials'
 import Brands from './Brands'
+import Footer from './Footer'
 
 const page = () => {
     return (
@@ -11,6 +12,7 @@ const page = () => {
             <KeyBenefits />
             <Testimonials />
             <Brands />
+            <Footer />
         </div>
     )
 }
