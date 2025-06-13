@@ -121,7 +121,7 @@ const Page = () => {
                                             Log in to keep your school in sync. 
                                         </CardTitle>
                                         <CardDescription className='text-[#121212] text-[16px] leading-tight'>
-                                            Join your school's hub for seamless collaboration.
+                                            Join your school&lsquo;s hub for seamless collaboration.
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="grid gap-6">
