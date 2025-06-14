@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState } from 'react'
@@ -19,14 +20,53 @@ import {
 } from "@/components/ui/tabs"
 import Image from 'next/image'
 import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        schoolName: '',
+        schoolLocation: '',
+        password: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const router = useRouter();
 
     const togglePasswordVisibility = (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setPasswordVisible(!passwordVisible);
     }
+
+    const handleSignup = async () => {
+        setError('');
+        setSuccess('');
+        setLoading(true);
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/auth/signup', formData);
+
+            setSuccess('Account created successfully!');
+            
+            // Optional: Save token if returned
+            // localStorage.setItem('token', response.data.token);
+
+            // Redirect to homepage
+            router.push('/login');
+        } catch (err: any) {
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Something went wrong');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className='w-full h-full'>
@@ -59,19 +99,39 @@ const Page = () => {
                                     <CardContent className="grid gap-6">
                                         <div className="grid gap-2">
                                             <Label htmlFor="name">Name</Label>
-                                            <Input id="name" placeholder="Enter your name" />
+                                            <Input 
+                                                id="name" 
+                                                placeholder="Enter your name" 
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            />
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="email">Email</Label>
-                                            <Input id="email" placeholder="Enter your email" />
+                                            <Input 
+                                                id="email" 
+                                                placeholder="Enter your email" 
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            />
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="schoolName">School name</Label>
-                                            <Input id="schoolName" placeholder="Enter your school name" />
+                                            <Input 
+                                                id="schoolName" 
+                                                placeholder="Enter your school name" 
+                                                value={formData.schoolName}
+                                                onChange={(e) => setFormData({ ...formData, schoolName: e.target.value })}
+                                            />
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="schoolLocation">School Location</Label>
-                                            <Input id="schoolLocation" placeholder="Enter your school location" />
+                                            <Input 
+                                                id="schoolLocation" 
+                                                placeholder="Enter your school location" 
+                                                value={formData.schoolLocation}
+                                                onChange={(e) => setFormData({ ...formData, schoolLocation: e.target.value })}
+                                            />
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="password">Password</Label>
@@ -80,6 +140,8 @@ const Page = () => {
                                                     type={passwordVisible ? 'text' : 'password'} 
                                                     id="password"
                                                     placeholder='Enter your password'
+                                                    value={formData.password}
+                                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                                 />
                                                 <span 
                                                     onClick={togglePasswordVisibility}
@@ -91,8 +153,12 @@ const Page = () => {
                                         </div>
                                     </CardContent>
                                     <CardFooter className='flex flex-col items-center w-full gap-5'>
-                                        <Button className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5'>
-                                            Sign up
+                                        <Button 
+                                            className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5'
+                                            onClick={handleSignup}
+                                            disabled={loading}
+                                        >
+                                            {loading ? 'Sign up...' : 'Sign up'}
                                         </Button>
                                         <div className='text-sm flex items-center gap-1'>
                                             <p>Already have an account?</p>
@@ -120,6 +186,8 @@ const Page = () => {
                     </TabsContent>
                 </Tabs>
             </div>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {success && <p className="text-green-600 text-sm">{success}</p>}
         </div>
     )
 }
