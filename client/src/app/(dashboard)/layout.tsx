@@ -2,7 +2,6 @@
 
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Sidebar from "@/components/AppSidebar";
-import { NAVBAR_HEIGHT } from "@/lib/constants";
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import PrivateRoute from "../context/PrivateRoute";
