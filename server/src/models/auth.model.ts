@@ -8,6 +8,7 @@ export interface IUser extends Document {
   schoolName: string;
   schoolLocation: string;
   password: string;
+  userRole?: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -41,6 +42,10 @@ const UserSchema: Schema<IUser> = new Schema(
             required: [true, "Password is required"],
             minlength: 6,
         },
+        userRole: {
+          type: String,
+          default: 'principal'
+        }
     },
     {
         timestamps: true,

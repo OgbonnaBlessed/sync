@@ -4,11 +4,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LayoutDashboard, LogOut, Mail, User, UserCircle } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, LogOut, Mail, User } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const Navbar = () => {
     const [user, setUser] = useState<any>(null);
+    console.log(user)
     const [menu, setMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -77,14 +78,14 @@ const Navbar = () => {
                                 >
                                     <div className='flex items-center gap-1 text-sm'>
                                         <User className='p-1'/>
-                                        <p>{user.name}</p>
+                                        <p>{user?.user?.name}</p>
                                     </div>
                                     <div className='flex items-center gap-1 text-sm'>
                                         <Mail className='p-1'/>
-                                        <p>{user.email}</p>
+                                        <p>{user?.user?.email}</p>
                                     </div>
                                     <Link 
-                                        href='/dashboard'
+                                        href='/principal/dashboard'
                                         className='flex items-center gap-1 text-sm'
                                     >
                                         <LayoutDashboard className='p-1'/>
@@ -92,7 +93,7 @@ const Navbar = () => {
                                     </Link>
                                     <button 
                                         onClick={handleLogout}
-                                        className='flex items-center gap-1 text-red-600 text-sm mt-2 hover:underline'
+                                        className='flex items-center gap-1 text-red-600 text-sm mt-2 hover:underline cursor-pointer'
                                     >
                                         <LogOut className='p-1' />
                                         Logout

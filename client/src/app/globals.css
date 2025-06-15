@@ -129,3 +129,7 @@
   font-variation-settings:
     "wdth" 100;
 }
+
+[data-collapsible="icon"] .group:hover .app-sidebar__logo {
+  @apply brightness-75;
+}

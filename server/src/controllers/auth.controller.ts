@@ -20,6 +20,10 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             return;
         }
 
+        if (password.length < 6) {
+            res.status(400).json({ message: "Password should not be less than 6 characters" });
+        }
+
         const newUser = await User.create({ name, email, schoolName, schoolLocation, password });
         const token = generateToken(newUser._id);
 
@@ -31,6 +35,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
                 email: newUser.email,
                 schoolName: newUser.schoolName,
                 schoolLocation: newUser.schoolLocation,
+                userRole: "principal"
             },
             token,
         });
@@ -66,6 +71,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
                 email: user.email,
                 schoolName: user.schoolName,
                 schoolLocation: user.schoolLocation,
+                userRole: user.userRole,
             },
             token,
         });

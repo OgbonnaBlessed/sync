@@ -58,11 +58,22 @@ const Page = () => {
 
             // Save token in localStorage or cookie
             localStorage.setItem('loginToken', response.data.token);
-            localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+            localStorage.setItem(
+                'userInfo',
+                JSON.stringify({
+                    user: {
+                        name: response.data.user.name,
+                        email: response.data.user.email,
+                        schoolName: response.data.user.schoolName,
+                        schoolLocation: response.data.user.schoolLocation,
+                    },
+                    userRole: response.data.user.userRole,
+                })
+            );
 
             setSuccess('Login successful!');
             setTimeout(() => {
-                router.push('/'); // Change to your dashboard route
+                router.push('/');
             }, 2000);
 
         } catch (err: any) {

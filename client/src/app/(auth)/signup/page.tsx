@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Eye, EyeClosed } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +22,7 @@ import Image from 'next/image'
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const Page = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -53,10 +54,13 @@ const Page = () => {
             setSuccess('Account created successfully!');
             
             // Optional: Save token if returned
-            // localStorage.setItem('token', response.data.token);
+            localStorage.setItem('token', response.data.token);
 
-            // Redirect to homepage
-            router.push('/login');
+            // Redirect to login page
+            setTimeout(() => {
+                router.push('/login');
+            }, 2000);
+
         } catch (err: any) {
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
@@ -67,6 +71,17 @@ const Page = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (error || success) {
+            const timeout = setTimeout(() => {
+                setError('');
+                setSuccess('');
+            }, 3000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [error, success]);
 
     return (
         <div className='w-full h-full'>
@@ -86,7 +101,7 @@ const Page = () => {
                 <Tabs defaultValue="principal" className='w-full h-full'>
                     <TabsContent value="principal" className='w-full h-full'>
                         <div className='flex items-stretch justify-between w-full h-full'>
-                            <Card className='w-[35rem] min-h-[35rem] flex items-center justify-center'>
+                            <Card className='relative w-[35rem] min-h-[35rem] flex items-center justify-center'>
                                 <div className='flex flex-col gap-5 w-full'>
                                     <CardHeader>
                                         <CardTitle className='text-[28px] leading-tight'>
@@ -171,6 +186,22 @@ const Page = () => {
                                         </div>
                                     </CardFooter>
                                 </div>
+
+                                <AnimatePresence mode="wait">
+                                    {(error || success) && (
+                                        <motion.div 
+                                            key={error ? 'error' : 'success'}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 1, y: 20 }}
+                                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                                            className='absolute bottom-0'
+                                        >
+                                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                                            {success && <p className="text-green-600 text-sm">{success}</p>}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </Card>
                             <div className='relative w-[35rem] overflow-hidden rounded-3xl'>
                                 <div className='h-full'>
