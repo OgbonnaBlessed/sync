@@ -49,7 +49,7 @@ const Page = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/signup', formData);
+            const response = await axios.post(`${process.env.API_URL}/api/auth/signup`, formData);
 
             setSuccess('Account created successfully!');
             
