@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -18,7 +19,6 @@ import {
   Tabs,
   TabsContent,
 } from "@/components/ui/tabs"
-import Image from 'next/image'
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -49,7 +49,7 @@ const Page = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${process.env.API_URL}/api/auth/signup`, formData);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL}/api/auth/signup`, formData);
 
             setSuccess('Account created successfully!');
             
@@ -89,11 +89,10 @@ const Page = () => {
                 <Link
                     href="/"
                 >
-                    <Image 
+                    <img 
                         src="/Logo.png"
                         alt="Logo"
-                        width={100}
-                        height={60}
+                        className='w-[100px] h-[60px] object-contain'
                     />
                 </Link>
             </div>
@@ -205,11 +204,10 @@ const Page = () => {
                             </Card>
                             <div className='relative w-[35rem] overflow-hidden rounded-3xl'>
                                 <div className='h-full'>
-                                    <Image 
+                                    <img 
                                         src='/hero2.jpg'
                                         alt="Signup Banner"
-                                        fill
-                                        className='object-cover'
+                                        className='object-cover absolute top-0 left-0 w-full h-full'
                                     />
                                 </div>
                             </div>

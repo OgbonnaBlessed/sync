@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown, LayoutDashboard, LogOut, Mail, User, Search, Bell } from 'lucide-react';
@@ -66,12 +66,10 @@ const Header = () => {
                             onClick={() => setMenu(!menu)}
                         >
                             <div>
-                                <Image 
+                                <img 
                                     src='/user.png'
                                     alt="user image"
-                                    width={30}
-                                    height={30}
-                                    className='rounded-full'
+                                    className='rounded-full w-[30px] h-[30px]'
                                 />
                             </div>
                             <ChevronDown className='w-4 h-4' />
