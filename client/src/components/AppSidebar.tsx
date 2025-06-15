@@ -78,27 +78,27 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
                                     asChild
                                     size="lg"
                                     className={cn(
-                                        "gap-4 p-8 hover:bg-customgreys-secondarybg group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center",
-                                        !isActive && "text-customgreys-dirtyGrey"
+                                        "gap-4 p-8 hover:bg-[#6C5CE7]/50 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center rounded-none",
+                                        !isActive && "text-gray-500"
                                     )}
                                 >
                                     <Link
                                         href={link.href}
                                         scroll={false}
-                                        className='relative flex items-center hover:bg-customgreys-darkerGrey'
+                                        className='relative flex items-center hover:bg-[#6C5CE7]/50'
                                     >
-                                        <link.icon className={isActive ? "text-white-50" : "text-gray-500"} />
+                                        <link.icon className={isActive ? "text-gray-700" : "text-gray-500"} />
                                         <span
                                             className={cn(
                                                 "font-medium text-md ml-4 group-data-[collapsible=icon]:hidden",
-                                                isActive ? "text-white-50" : "text-gray-500"
+                                                isActive ? "text-gray-700" : "text-gray-500"
                                             )}
                                         >
                                             {link.label}
                                         </span>
                                     </Link>
                                 </SidebarMenuButton>
-                                {isActive && <div className='absolute right-0 top-0 h-full w-[4px] bg-primary-750' />}
+                                {isActive && <div className='absolute right-0 top-0 h-full w-[4px] bg-[#6C5CE7]/50' />}
                             </SidebarMenuItem>
                         )
                     })}
