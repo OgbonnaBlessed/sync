@@ -19,7 +19,7 @@ app.get("/api", (_req, res) => {
 });
 
 // Serve static files
-const outDir = path.join(__dirname, "../client/out");
+const outDir = path.join(__dirname, "../../client/out");
 console.log("Serving static files from:", outDir); // 🕵️‍♀️ Add this
 app.use(express.static(outDir));
 
