@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import {
   Carousel,
   CarouselContent,
@@ -66,10 +66,9 @@ export default function Testimonials() {
                                             <h3 className="font-semibold text-[20px]">{t.name}</h3>
                                         </div>
                                         <div className="relative h-64 w-full md:w-1/3 rounded-lg overflow-hidden">
-                                            <Image
+                                            <img
                                                 src={t.image}
                                                 alt={t.name}
-                                                fill
                                                 className="object-cover object-top"
                                             />
                                         </div>

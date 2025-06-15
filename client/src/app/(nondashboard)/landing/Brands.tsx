@@ -1,4 +1,4 @@
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 import React from 'react'
 
 const Brands = () => {
@@ -37,11 +37,10 @@ const Brands = () => {
                             key={i}
                             className='flex items-center gap-2'
                         >
-                            <Image 
+                            <img 
                                 src={brand.image}
                                 alt={`Brand-${i + 1}`}
-                                width={30}
-                                height={30}
+                                className='w-10 h-10'
                             />
                             <p>{brand.text}</p>
                         </div>

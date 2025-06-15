@@ -1,4 +1,4 @@
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 import type { FC } from 'react';
 
 interface WaveCardProps {
@@ -11,7 +11,7 @@ interface WaveCardProps {
 const WaveCard: FC<WaveCardProps> = ({ src, alt, size }) => (
   <div className={`relative overflow-hidden rounded-[18px] ${size}`}>
     {/* the photo itself */}
-    <Image fill src={src} alt={alt} className="object-cover" />
+    <img src={src} alt={alt} className="object-cover" />
 
     {/* TOP valley */}
     <span

@@ -1,4 +1,4 @@
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import { Activity, Handshake, MessageSquareText } from 'lucide-react'
 
@@ -10,11 +10,10 @@ const KeyBenefits = () => {
                 <div className='flex flex-col gap-3 w-full'>
                     <div className='flex items-center gap-3 w-full h-[200px]'>
                         <div className='bg-[#6C5CE71A] flex flex-col flex-1 h-full gap-5 rounded-lg p-5 border-2 border-[#6C5CE7]'>
-                            <Image 
+                            <img 
                                 src='/bulb.png'
                                 alt='Bulb icon'
-                                width={15}
-                                height={15}
+                                className='w-[15px] min-h-[15px]'
                             />
                             <div className='flex flex-col'>
                                 <h2 className='font-semibold'>Clear & Actionable Insights</h2>
