@@ -4,7 +4,7 @@
 
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LayoutDashboard, LogOut, Mail, User, Search, Bell } from 'lucide-react';
+import { ChevronDown, LogOut, Mail, User, Search, Bell, Home } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const Header = () => {
@@ -92,11 +92,11 @@ const Header = () => {
                                         <p>{user?.user?.email}</p>
                                     </div>
                                     <Link 
-                                        href='/principal/dashboard'
+                                        href='/'
                                         className='flex items-center gap-1 text-sm'
                                     >
-                                        <LayoutDashboard className='p-1'/>
-                                        <p>Dashboard</p>
+                                        <Home className='p-1'/>
+                                        <p>Home</p>
                                     </Link>
                                     <button 
                                         onClick={handleLogout}
