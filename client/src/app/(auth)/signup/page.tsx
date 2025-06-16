@@ -49,7 +49,7 @@ const Page = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL}/api/auth/signup`, formData);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, formData);
 
             setSuccess('Account created successfully!');
             
