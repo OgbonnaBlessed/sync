@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import { usePathname } from 'next/navigation';
 import React from 'react'
 import { SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from './ui/sidebar';
 import { BookOpen, ClipboardList, DollarSign, LayoutDashboard, LogOut, PanelLeft, Settings, Users } from 'lucide-react';
 import { Sidebar } from './ui/sidebar';
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -49,12 +49,10 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
                             className='group'
                         >
                             <div className='flex justify-between items-center gap-5 pl-3 pr-1 h-10 w-full group-data-[collapsible=icon]:ml-1 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:px-0 group'>
-                                <Image 
+                                <img 
                                     src="/logo.png"
                                     alt='logo'
-                                    width={100}
-                                    height={60}
-                                    className='app-sidebar__logo'
+                                    className='app-sidebar__logo w-[100px] h-[60px] object-contain'
                                 />
                                 <PanelLeft className='text-gray-400 w-5 h-5 group-data-[collapsible=icon]:hidden cursor-pointer' />
                             </div>
