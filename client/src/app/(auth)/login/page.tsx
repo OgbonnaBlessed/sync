@@ -25,6 +25,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/app/context/AuthContext';
 
 const Page = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -36,6 +37,7 @@ const Page = () => {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const { setAuthUser } = useAuth();
 
     const togglePasswordVisibility = (e: { preventDefault: () => void }) => {
         e.preventDefault();
@@ -70,6 +72,17 @@ const Page = () => {
                     userRole: response.data.user.userRole,
                 })
             );
+
+            // Set authUser
+            setAuthUser({
+                userInfo: {
+                    name: response.data.user.name,
+                    email: response.data.user.email,
+                    schoolName: response.data.user.schoolName,
+                    schoolLocation: response.data.user.schoolLocation,
+                },
+                userRole: response.data.user.userRole,
+            });
 
             setSuccess('Login successful!');
             setTimeout(() => {

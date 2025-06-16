@@ -172,7 +172,7 @@ const Page = () => {
                                             onClick={handleSignup}
                                             disabled={loading}
                                         >
-                                            {loading ? 'Sign up...' : 'Sign up'}
+                                            {loading ? 'Signing up...' : 'Sign up'}
                                         </Button>
                                         <div className='text-sm flex items-center gap-1'>
                                             <p>Already have an account?</p>

@@ -5,6 +5,9 @@ import { createContext, useContext, useState, useEffect } from "react";
 interface UserInfo {
   name: string;
   image?: string;
+  email: string;
+  schoolName: string;
+  schoolLocation: string;
 }
 
 interface AuthUser {
