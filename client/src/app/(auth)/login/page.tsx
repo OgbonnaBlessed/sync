@@ -33,6 +33,10 @@ const Page = () => {
         email: '',
         password: '',
     });
+    const [teacherFormData, setTeacherFormData] = useState({
+        teacherId: '',
+        password: ''
+    })
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
@@ -95,6 +99,46 @@ const Page = () => {
             setLoading(false);
         }
     };
+
+    const handleTeacherLogin = async () => {
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/login`, teacherFormData);
+
+            localStorage.setItem('loginToken', response.data.token);
+            localStorage.setItem(
+                'userInfo',
+                JSON.stringify({
+                    user: {
+                        name: response.data.teacher.name,
+                        teacherId: response.data.teacher.teacherId,
+                    },
+                    userRole: response.data.teacher.userRole,
+                })
+            );
+            console.log(response);
+
+            setAuthUser({
+                userInfo: {
+                    name: response.data.teacher.name,
+                    teacherId: response.data.teacher.teacherId,
+                },
+                userRole: response.data.teacher.userRole,
+            });
+
+            setSuccess('Login successful!');
+            setTimeout(() => {
+                router.push('/');
+            }, 2000);
+        } catch (err: any) {
+            setError(err?.response?.data?.message || 'Login failed. Try again.');
+        } finally {
+            setLoading(false);
+        }
+        };
 
     useEffect(() => {
         if (error || success) {
@@ -228,7 +272,14 @@ const Page = () => {
                                     <CardContent className="grid gap-6">
                                         <div className="grid gap-2">
                                             <Label htmlFor="email">Teacher id</Label>
-                                            <Input id="teacherId" placeholder="Enter your teacher id" />
+                                            <Input 
+                                                id="teacherId" 
+                                                placeholder="Enter your teacher id" 
+                                                value={teacherFormData.teacherId}
+                                                onChange={(e) =>
+                                                    setTeacherFormData({ ...teacherFormData, teacherId: e.target.value })
+                                                }
+                                            />
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="password">Password</Label>
@@ -237,6 +288,10 @@ const Page = () => {
                                                     type={passwordVisible ? 'text' : 'password'} 
                                                     id="password"
                                                     placeholder='Enter your password'
+                                                    value={teacherFormData.password}
+                                                    onChange={(e) =>
+                                                        setTeacherFormData({ ...teacherFormData, password: e.target.value })
+                                                    }
                                                 />
                                                 <span 
                                                     onClick={togglePasswordVisibility}
@@ -248,11 +303,30 @@ const Page = () => {
                                         </div>
                                     </CardContent>
                                     <CardFooter className='flex flex-col items-center w-full gap-5'>
-                                        <Button className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5'>
+                                        <Button 
+                                            onClick={handleTeacherLogin}
+                                            disabled={loading}
+                                            className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5'
+                                        >
                                             Log in
                                         </Button>
                                     </CardFooter>
                                 </div>
+                                <AnimatePresence mode="wait">
+                                    {(error || success) && (
+                                        <motion.div 
+                                            key={error ? 'error' : 'success'}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 1, y: 20 }}
+                                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                                            className='absolute bottom-5'
+                                        >
+                                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                                            {success && <p className="text-green-600 text-sm">{success}</p>}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </Card>
                             <div className='relative w-[35rem] overflow-hidden rounded-3xl'>
                                 <div className='h-full'>

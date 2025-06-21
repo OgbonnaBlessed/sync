@@ -52,7 +52,7 @@ const AddTeacher = () => {
             }
 
             const response = await axios.post(
-            `http://localhost:5000/api/teacher/create`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/teacher/create`,
                 formPayload,
                 {
                     headers: {

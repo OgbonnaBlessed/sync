@@ -4,14 +4,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LayoutDashboard, LogOut, Mail, User } from 'lucide-react';
+import { BadgeCheck, ChevronDown, LayoutDashboard, LogOut, Mail, User } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAuth } from '@/app/context/AuthContext';
 
 const Navbar = () => {
     const [user, setUser] = useState<any>(null);
     console.log(user)
     const [menu, setMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const { authUser } = useAuth();
+    console.log(authUser?.userRole)
 
     useEffect(() => {
         const storedUser = localStorage.getItem('userInfo');
@@ -80,17 +83,35 @@ const Navbar = () => {
                                         <User className='p-1'/>
                                         <p>{user?.user?.name}</p>
                                     </div>
-                                    <div className='flex items-center gap-1 text-sm'>
-                                        <Mail className='p-1'/>
-                                        <p>{user?.user?.email}</p>
-                                    </div>
-                                    <Link 
-                                        href='/principal/dashboard'
-                                        className='flex items-center gap-1 text-sm'
-                                    >
-                                        <LayoutDashboard className='p-1'/>
-                                        <p>Dashboard</p>
-                                    </Link>
+                                    {authUser?.userRole === "principal" ? (
+                                        <>
+                                            <div className='flex items-center gap-1 text-sm'>
+                                                <Mail className='p-1'/>
+                                                <p>{user?.user?.email}</p>
+                                            </div>
+                                            <Link 
+                                                href='/principal/dashboard'
+                                                className='flex items-center gap-1 text-sm'
+                                            >
+                                                <LayoutDashboard className='p-1'/>
+                                                <p>Dashboard</p>
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className='flex items-center gap-1 text-sm'>
+                                                <BadgeCheck className='p-1'/>
+                                                <p>{user?.user?.teacherId}</p>
+                                            </div>
+                                            <Link 
+                                                href='/teacher/dashboard'
+                                                className='flex items-center gap-1 text-sm'
+                                            >
+                                                <LayoutDashboard className='p-1'/>
+                                                <p>Dashboard</p>
+                                            </Link>
+                                        </>
+                                    )}
                                     <button 
                                         onClick={handleLogout}
                                         className='flex items-center gap-1 text-red-600 text-sm mt-2 hover:underline cursor-pointer'

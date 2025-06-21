@@ -6,11 +6,13 @@ import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown, LogOut, Mail, User, Search, Bell, Home } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
     const [user, setUser] = useState<any>(null);
     const [menu, setMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
     
     useEffect(() => {
         const storedUser = localStorage.getItem('userInfo');
@@ -24,6 +26,7 @@ const Header = () => {
         localStorage.removeItem('loginToken');
         localStorage.removeItem('userInfo');
         setUser(null);
+        router.push('/login');
     };
     
     useEffect(() => {
