@@ -124,6 +124,7 @@ const Page = () => {
                                             <Label htmlFor="email">Email</Label>
                                             <Input 
                                                 id="email" 
+                                                type='email'
                                                 placeholder="Enter your email" 
                                                 value={formData.email}
                                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}

@@ -104,7 +104,10 @@ const page = () => {
                                         </TableCell>
                                         <TableCell>{teacher.activity}</TableCell>
                                         <TableCell className='pr-8 py-4 text-right'>
-                                            <Link href="#" className="text-[#6C5CE7] text-sm font-medium">
+                                            <Link 
+                                                href={`/principal/teachers/${index}`} 
+                                                className="text-[#6C5CE7] text-sm font-medium"
+                                            >
                                                 View
                                             </Link>
                                         </TableCell>

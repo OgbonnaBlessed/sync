@@ -9,7 +9,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const Header = () => {
     const [user, setUser] = useState<any>(null);
-    console.log(user)
     const [menu, setMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     
