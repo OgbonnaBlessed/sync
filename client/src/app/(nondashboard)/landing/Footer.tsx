@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React from 'react'
 
@@ -18,9 +17,12 @@ const Footer = () => {
                         <p className='max-w-xl text-[28px] text-center'>
                             Take the first step towards seamless collaboration with Sync.
                         </p>
-                        <Button className='bg-[#6C5CE7] px-8 py-6 rounded-[8px] text-white text-sm cursor-pointer hover:bg-[#6C5CE7]'>
+                        <Link 
+                            href="/signup"
+                            className='bg-[#6C5CE7] px-8 py-4 rounded-[8px] text-white text-sm cursor-pointer hover:bg-[#6C5CE7] font-medium'
+                        >
                             Experience Sync
-                        </Button>
+                        </Link>
                     </div>
                 </div>
                 <div className='flex items-center justify-between w-full'>

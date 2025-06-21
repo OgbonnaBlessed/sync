@@ -1,10 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { Activity, Handshake, MessageSquareText } from 'lucide-react'
 
-const KeyBenefits = () => {
+const KeyBenefits = forwardRef<HTMLDivElement>((props, ref) => {
     return (
-        <div className='min-h-screen w-full flex items-center justify-center px-20'>
+        <div 
+            ref={ref}
+            className='min-h-screen w-full flex items-center justify-center px-20'
+        >
             <div className='flex flex-col gap-5 w-full'>
                 <h1 className='text-[40px] font-semibold'>Key Benefits</h1>
                 <div className='flex flex-col gap-3 w-full'>
@@ -56,6 +59,7 @@ const KeyBenefits = () => {
             </div>
         </div>
     )
-}
+})
 
+KeyBenefits.displayName = 'KeyBenefits'
 export default KeyBenefits

@@ -13,8 +13,12 @@ const generateToken = (userId: string) =>
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { name, email, schoolName, schoolLocation, password } = req.body;
-        const existingUser = await User.findOne({ email });
+        if (!name || !email || !schoolName || !schoolLocation || !password) {
+            res.status(400).json({ message: "Please, fill all fields" });
+            return;
+        }
 
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             res.status(400).json({ message: "User already exists." });
             return;

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import WaveCard from '@/components/WaveCard'
 import React from 'react'
 
-const HeroSection = () => {
+const HeroSection = ({ scrollToBenefits }: { scrollToBenefits: () => void }) => {
     return (
         <div className='min-h-screen w-full bg-white flex flex-col items-center justify-center gap-8'>
             <div className='flex flex-col gap-3 items-center'>
@@ -15,7 +15,10 @@ const HeroSection = () => {
                         parents to support every student’s journey.
                     </p>
                 </div>
-                <Button className='bg-[#6C5CE7] px-8 py-6 rounded-[8px] text-white text-sm cursor-pointer hover:bg-[#6C5CE7]'>
+                <Button 
+                    onClick={scrollToBenefits}
+                    className='bg-[#6C5CE7] px-8 py-6 rounded-[8px] text-white text-sm cursor-pointer hover:bg-[#6C5CE7]'
+                >
                     Explore Sync
                 </Button>
             </div>
