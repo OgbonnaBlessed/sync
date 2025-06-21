@@ -76,9 +76,12 @@ const page = () => {
                 <div className='flex flex-col border rounded-lg'>
                     <div className="flex justify-between items-center px-8 py-4">
                         <h2 className="text-xl font-semibold">Teachers</h2>
-                        <button className="bg-[#6C5CE7] text-white px-4 py-2 rounded-md text-sm hover:bg-[#6C5CE7]/80 transition-all">
-                            + Add teachers
-                        </button>
+                        <Link 
+                            href="/principal/teachers/addTeacher"
+                            className="bg-[#6C5CE7] text-white px-4 py-2 rounded-md text-sm hover:bg-[#6C5CE7]/80 transition-all"
+                        >
+                            + Add teacher
+                        </Link>
                     </div>
                     <div className="rounded-b-lg border">
                         <Table>

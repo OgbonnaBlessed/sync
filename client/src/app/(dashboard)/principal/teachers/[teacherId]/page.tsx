@@ -90,22 +90,22 @@ const TeacherProfilePage = () => {
                                     <p>see more details</p>
                                     <ChevronDown className={`p-1 transition-transform duration-500 ${showDetails ? 'transform rotate-180' : ''}`} />
                                 </div>
-                                {showDetails && (
-                                    <AnimatePresence mode="wait">
-                                        <motion.div 
-                                            key="details"
-                                            initial={{ opacity: 0, y: -20 }}
-                                            animate={{ opacity: 1, y: 20 }}
-                                            exit={{ opacity: 0, y: -20 }}
-                                            transition={{ duration: 0.5, ease: "easeInOut" }}
-                                            className='flex flex-col gap-1 text-sm absolute top-2 left-0 bg-gray-200 rounded-xl p-3'
-                                        >
-                                            <p><strong>Date of Birth:</strong> 14th June, 1990</p>
-                                            <p><strong>Discipline:</strong> Mathematics</p>
-                                            <p><strong>Certifications:</strong> Bsc Mathematics, Msc. Mathematics and Computer science</p>
-                                        </motion.div>
+                                    <AnimatePresence mode="popLayout">
+                                        {showDetails && (
+                                            <motion.div 
+                                                key="details"
+                                                initial={{ opacity: 0, y: -20 }}
+                                                animate={{ opacity: 1, y: 20 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{ duration: 0.5, ease: "easeInOut" }}
+                                                className='flex flex-col gap-1 text-sm absolute top-2 left-0 bg-gray-200 rounded-xl p-3'
+                                            >
+                                                <p><strong>Date of Birth:</strong> 14th June, 1990</p>
+                                                <p><strong>Discipline:</strong> Mathematics</p>
+                                                <p><strong>Certifications:</strong> Bsc Mathematics, Msc. Mathematics and Computer science</p>
+                                            </motion.div>
+                                        )}
                                     </AnimatePresence>
-                                )}
                             </div>
                             <Button className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5 max-w-[15rem]'>
                                 Deactivate teacher
