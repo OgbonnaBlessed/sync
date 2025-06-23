@@ -23,9 +23,10 @@ const Page = () => {
         const fetchTeachers = async () => {
             try {
                 const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/all`);
-                setTeachers(res.data.teachers);
-                setTeacherCount(res.data.count);
-
+                const activeTeachers = res.data.teachers.filter((t: any) => t.status === 'active');
+                setTeachers(activeTeachers);
+                setTeacherCount(activeTeachers.length);
+                
             } catch (error) {
                 console.error('Failed to fetch teachers:', error);
             }
@@ -89,31 +90,31 @@ const Page = () => {
                                     </TableRow>
                                 ) : (
                                     teachers.map((teacher: any, index: number) => (
-                                    <TableRow key={index}>
-                                        <TableCell className='px-8 py-4'>{teacher.name}</TableCell>
-                                        <TableCell>
-                                            {teacher.classes?.length || 0} class{teacher.classes?.length !== 1 ? 'es' : ''}
-                                        </TableCell>
-                                        <TableCell>
-                                        <span className={`inline-flex items-center gap-1`}>
-                                            <span className={`w-2 h-2 rounded-full ${teacher.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
-                                            <span className={`text-sm ${teacher.status === 'active' ? 'text-green-700' : 'text-red-700'}`}>
-                                            {teacher.status.charAt(0).toUpperCase() + teacher.status.slice(1)}
+                                        <TableRow key={index}>
+                                            <TableCell className='px-8 py-4'>{teacher.name}</TableCell>
+                                            <TableCell>
+                                                {teacher.classes?.length || 0} class{teacher.classes?.length !== 1 ? 'es' : ''}
+                                            </TableCell>
+                                            <TableCell>
+                                            <span className={`inline-flex items-center gap-1`}>
+                                                <span className={`w-2 h-2 rounded-full ${teacher.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
+                                                <span className={`text-sm ${teacher.status === 'active' ? 'text-green-700' : 'text-red-700'}`}>
+                                                {teacher.status.charAt(0).toUpperCase() + teacher.status.slice(1)}
+                                                </span>
                                             </span>
-                                        </span>
-                                        </TableCell>
-                                        <TableCell>
-                                            {teacher.lastLogin ? (teacher.lastLogin).toLocaleString() : "No activity yet"}
-                                        </TableCell>
-                                        <TableCell className='pr-8 py-4 text-right'>
-                                            <Link 
-                                                href={`/principal/teachers/${teacher._id}`} 
-                                                className="text-[#6C5CE7] text-sm font-medium"
-                                            >
-                                                View
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
+                                            </TableCell>
+                                            <TableCell>
+                                                {teacher.lastLogin ? (teacher.lastLogin).toLocaleString() : "No activity yet"}
+                                            </TableCell>
+                                            <TableCell className='pr-8 py-4 text-right'>
+                                                <Link 
+                                                    href={`/principal/teachers/${teacher._id}`} 
+                                                    className="text-[#6C5CE7] text-sm font-medium"
+                                                >
+                                                    View
+                                                </Link>
+                                            </TableCell>
+                                        </TableRow>
                                     ))
                                 )}
                             </TableBody>

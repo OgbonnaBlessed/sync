@@ -20,6 +20,7 @@ const AddTeacher = () => {
         certification: '',
         password: '',
         id: '',
+        gender: '',
     })
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -49,6 +50,7 @@ const AddTeacher = () => {
             formPayload.append('certification', formData.certification);
             formPayload.append('password', formData.password);
             formPayload.append('teacherId', formData.id);
+            formPayload.append('gender', formData.gender);
             if (imageFile) {
                 formPayload.append('image', imageFile);
             }
@@ -72,6 +74,7 @@ const AddTeacher = () => {
                 certification: '',
                 password: '',
                 id: '',
+                gender: '',
             });
             setImageFile(null);
             setTimeout(() => {
@@ -93,7 +96,7 @@ const AddTeacher = () => {
             <div className='flex flex-col gap-8 w-full'>
                 <h1 className="text-2xl font-semibold">Add teacher</h1>
                 <div className='flex flex-col gap-5 w-full max-w-lg items-center justify-center mx-auto'>
-                    <div className='w-lg h-64 rounded-md flex items-center justify-center border hover:bg-gray-300 transition-all duration-300'>
+                    <div className='w-lg h-64 rounded-md flex items-center justify-center border hover:bg-gray-300 transition-all duration-300 overflow-hidden'>
                         <div 
                             onClick={() => filePickerRef.current?.click()}
                             className='flex flex-col gap-2 cursor-pointer items-center text-sm'
@@ -102,7 +105,7 @@ const AddTeacher = () => {
                                 <img
                                     src={URL.createObjectURL(imageFile)}
                                     alt='Preview'
-                                    className='w-full h-full object-cover'
+                                    className='w-full object-cover'
                                 />
                             ) : (
                                 <div className='flex flex-col gap-2 cursor-pointer items-center text-sm'>
@@ -134,6 +137,15 @@ const AddTeacher = () => {
                             placeholder="Enter teacher's name" 
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
+                    </div>
+                    <div className="grid gap-2 w-full">
+                        <Label htmlFor="name">Gender</Label>
+                        <Input 
+                            id="gender" 
+                            placeholder="Enter teacher's gender" 
+                            value={formData.gender}
+                            onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                         />
                     </div>
                     <div className="grid gap-2 w-full">

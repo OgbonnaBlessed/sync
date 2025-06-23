@@ -10,13 +10,42 @@ import { Label } from '@radix-ui/react-label'
 import { ChevronDown, Eye, EyeClosed } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
+import axios from 'axios'
 
 const TeacherProfilePage = () => {
-    const { teacherId } = useParams()
-    const [password, setPassword] = useState('');
+    const { teacherId } = useParams();
+    const [teacher, setTeacher] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const detailsRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const fetchTeacher = async () => {
+            try {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/${teacherId}`)
+                setTeacher(res.data.teacher)
+
+            } catch (error) {
+                console.error('Error fetching teacher:', error)
+
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (teacherId) fetchTeacher()
+    }, [teacherId])
+
+    const handleToggleStatus = async () => {
+        try {
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/toggle-status/${teacherId}`)
+            setTeacher(res.data.teacher)
+
+        } catch (error) {
+            console.error('Failed to toggle status:', error)
+        }
+    }
 
     const togglePasswordVisibility = (e: { preventDefault: () => void }) => {
         e.preventDefault();
@@ -36,18 +65,34 @@ const TeacherProfilePage = () => {
         };
     }, []);
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <p>Loading teacher profile...</p>
+            </div>
+        )
+    }
+
+    if (!teacher) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <p>Teacher not found.</p>
+            </div>
+        )
+    }
+
     return (
         <div className='flex flex-col gap-10 p-8'>
             <Header />
 
             <div className='flex flex-col gap-4'>
-                <h1 className="text-2xl font-semibold">Teacher</h1>
+                <h1 className="text-2xl font-semibold">Teacher&lsquo;s profile</h1>
 
                 <div className='flex gap-10 items-start'>
                     <div className='bg-gray-200 p-2 rounded-xl h-96'>
                         <div className='relative w-64 h-40'>
                             <Image 
-                                src="/teacher.jpg"
+                                src={teacher.image || "/teacher.jpg"}
                                 alt="Teacher image"
                                 fill
                                 className='object-cover rounded-xl'
@@ -56,21 +101,19 @@ const TeacherProfilePage = () => {
                     </div>
                     <div className='flex flex-col gap-3'>
                         <div className='flex flex-col gap-1'>
-                            <h2 className='font-semibold text-xl'>Akingbade Abidemi Moses</h2>
-                            <p className='text-sm text-gray-500'>Male</p>
+                            <h2 className='font-semibold text-xl'>{teacher.name}</h2>
+                            <p className='text-sm text-gray-500'>{teacher.gender || "not specified"}</p>
                         </div>
-                        <div>Status: Active since Feb 2021</div>
-                        <div>Enrolled classes: 2</div>
+                        <div>Status: {teacher.status} {teacher.lastLogin === undefined ? '' : `since ${teacher.lastLogin}`}</div>
+                        <div>Enrolled classes:  {teacher.classes?.length || 0}</div>
                         <div className="grid gap-2 max-w-[15rem]">
                             <Label htmlFor="password" className='text-sm font-semibold'>Password</Label>
                             <div className='relative'>
                                 <Input 
                                     type={passwordVisible ? 'text' : 'password'} 
                                     id="password"
-                                    placeholder='Enter your password'
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-
+                                    value={teacher.password}
+                                    readOnly
                                 />
                                 <span 
                                     onClick={togglePasswordVisibility}
@@ -87,7 +130,12 @@ const TeacherProfilePage = () => {
                                     className='flex items-center cursor-pointer text-gray-500 text-sm'
                                 >
                                     <p>see more details</p>
-                                    <ChevronDown className={`p-1 transition-transform duration-500 ${showDetails ? 'transform rotate-180' : ''}`} />
+                                    <ChevronDown className={`p-1 transition-transform duration-500 
+                                        ${showDetails 
+                                            ? 'transform rotate-180' 
+                                            : ''
+                                        }`} 
+                                    />
                                 </div>
                                     <AnimatePresence mode="popLayout">
                                         {showDetails && (
@@ -99,15 +147,23 @@ const TeacherProfilePage = () => {
                                                 transition={{ duration: 0.5, ease: "easeInOut" }}
                                                 className='flex flex-col gap-1 text-sm absolute top-2 left-0 bg-gray-200 rounded-xl p-3'
                                             >
-                                                <p><strong>Date of Birth:</strong> 14th June, 1990</p>
-                                                <p><strong>Discipline:</strong> Mathematics</p>
-                                                <p><strong>Certifications:</strong> Bsc Mathematics, Msc. Mathematics and Computer science</p>
+                                                <p><strong>Date of Birth:</strong> {teacher.DOB}</p>
+                                                <p><strong>Discipline:</strong> {teacher.discipline}</p>
+                                                <p><strong>Certifications:</strong> {teacher.certification}</p>
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
                             </div>
-                            <Button className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5 max-w-[15rem]'>
-                                Deactivate teacher
+                            <Button
+                                onClick={handleToggleStatus}
+                                className={`w-full cursor-pointer transition-all duration-300 ease-in-out py-5 max-w-[15rem] 
+                                    ${teacher.status === 'active' 
+                                        ? 'bg-[#6C5CE7] hover:bg-[#6C5CE7]/80' 
+                                        : 'bg-red-500 hover:bg-red-500/80'
+                                    }`
+                                }
+                            >
+                                {teacher.status === 'active' ? 'Deactivate Teacher' : 'Activate Teacher'}
                             </Button>
                         </div>
                     </div>

@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import Teacher from '../models/teacher.model';
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs"
 
 dotenv.config();
 
@@ -11,7 +10,7 @@ const generateToken = (id: string) =>
 
 export const registerTeacher = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { name, DOB, discipline, certification, password, teacherId } = req.body;
+        const { name, DOB, discipline, certification, password, teacherId, gender } = req.body;
 
         if (!name || !DOB || !discipline || !certification || !password) {
             res.status(400).json({ message: 'All fields are required.' });
@@ -38,6 +37,7 @@ export const registerTeacher = async (req: Request, res: Response): Promise<void
             certification,
             password,
             teacherId,
+            gender,
             image: imageUrl
         });
 
@@ -72,13 +72,6 @@ export const loginTeacher = async (req: Request, res: Response): Promise<void> =
 
         if (!teacher) {
             res.status(404).json({ message: 'Invalid credentials.' });
-            return;
-        }
-
-        const isMatch = await bcrypt.compare(password, teacher.password);
-
-        if (!isMatch) {
-            res.status(401).json({ message: 'Invalid credentials.' });
             return;
         }
 
@@ -130,5 +123,22 @@ export const toggleTeacherStatus = async (req: Request, res: Response): Promise<
         res.status(200).json({ message: `Teacher is now ${teacher.status}`, teacher });
     } catch (error) {
         res.status(500).json({ message: "Failed to update status", error });
+    }
+};
+
+export const getTeacherById = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const teacher = await Teacher.findById(id);
+
+        if (!teacher) {
+            res.status(404).json({ message: "Teacher not found." });
+            return;
+        }
+
+        res.status(200).json({ teacher });
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
     }
 };
