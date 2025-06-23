@@ -42,7 +42,6 @@ const TeacherProfilePage = () => {
 
             <div className='flex flex-col gap-4'>
                 <h1 className="text-2xl font-semibold">Teacher</h1>
-                <p>Showing profile for teacher ID: <strong>{teacherId}</strong></p>
 
                 <div className='flex gap-10 items-start'>
                     <div className='bg-gray-200 p-2 rounded-xl h-96'>

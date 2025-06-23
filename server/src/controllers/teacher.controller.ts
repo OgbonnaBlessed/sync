@@ -83,6 +83,8 @@ export const loginTeacher = async (req: Request, res: Response): Promise<void> =
         }
 
         const token = generateToken(teacher._id);
+        teacher.lastLogin = new Date();
+        await teacher.save();
 
         res.status(200).json({
             message: 'Login successful.',
@@ -91,6 +93,7 @@ export const loginTeacher = async (req: Request, res: Response): Promise<void> =
                 name: teacher.name,
                 teacherId: teacher.teacherId,
                 userRole: 'teacher',
+                lastLogin: teacher.lastLogin,
             },
             token
         });
@@ -98,5 +101,34 @@ export const loginTeacher = async (req: Request, res: Response): Promise<void> =
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Server error.', error });
+    }
+};
+
+export const getAllTeachers = async (req: Request, res: Response) => {
+    try {
+        const teachers = await Teacher.find();
+        res.status(200).json({ count: teachers.length, teachers });
+        
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch teachers", error });
+    }
+};
+
+export const toggleTeacherStatus = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const teacher = await Teacher.findById(id);
+
+        if (!teacher) {
+            res.status(404).json({ message: "Teacher not found" });
+            return;
+        }
+
+        teacher.status = teacher.status === 'active' ? 'inactive' : 'active';
+        await teacher.save();
+
+        res.status(200).json({ message: `Teacher is now ${teacher.status}`, teacher });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to update status", error });
     }
 };

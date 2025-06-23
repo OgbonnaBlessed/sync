@@ -10,6 +10,7 @@ import { Eye, EyeClosed, ImagePlus } from 'lucide-react'
 import React, { useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const AddTeacher = () => {
     const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ const AddTeacher = () => {
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const filePickerRef = useRef<HTMLInputElement | null>(null)
+    const router = useRouter();
 
     const togglePasswordVisibility = (e: { preventDefault: () => void }) => {
         e.preventDefault();
@@ -72,6 +74,9 @@ const AddTeacher = () => {
                 id: '',
             });
             setImageFile(null);
+            setTimeout(() => {
+                router.push('/principal/teachers')
+            }, 2000);
 
         } catch (error: any) {
             console.error(error);

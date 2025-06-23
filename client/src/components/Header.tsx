@@ -4,14 +4,16 @@
 
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LogOut, Mail, User, Search, Bell, Home } from 'lucide-react';
+import { ChevronDown, LogOut, Mail, User, Search, Bell, Home, BadgeCheck } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/context/AuthContext';
 
 const Header = () => {
     const [user, setUser] = useState<any>(null);
     const [menu, setMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const { authUser } = useAuth();
     const router = useRouter();
     
     useEffect(() => {
@@ -89,10 +91,17 @@ const Header = () => {
                                         <User className='p-1'/>
                                         <p>{user?.user?.name}</p>
                                     </div>
-                                    <div className='flex items-center gap-1 text-sm'>
-                                        <Mail className='p-1'/>
-                                        <p>{user?.user?.email}</p>
-                                    </div>
+                                    {authUser?.userRole === "principal" ? (
+                                        <div className='flex items-center gap-1 text-sm'>
+                                            <Mail className='p-1'/>
+                                            <p>{user?.user?.email}</p>
+                                        </div>
+                                    ) : (
+                                        <div className='flex items-center gap-1 text-sm'>
+                                            <BadgeCheck className='p-1'/>
+                                            <p>{user?.user?.teacherId}</p>
+                                        </div>
+                                    )}
                                     <Link 
                                         href='/'
                                         className='flex items-center gap-1 text-sm'

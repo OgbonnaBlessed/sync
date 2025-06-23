@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Header from '@/components/Header';
@@ -9,50 +10,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import { BookOpen, DollarSign, Users2 } from 'lucide-react';
+import axios from 'axios';
 
-const teachers = [
-    {
-        name: 'Bolaji OyewoIe',
-        numberOfClasses: '2 classes',
-        status: 'Active',
-        activity: 'Seen today',
-    },
-    {
-        name: 'Bolaji OyewoIe',
-        numberOfClasses: '2 classes',
-        status: 'Active',
-        activity: 'Seen today',
-    },
-    {
-        name: 'Bolaji OyewoIe',
-        numberOfClasses: '2 classes',
-        status: 'Active',
-        activity: 'Seen today',
-    },
-    {
-        name: 'Bolaji OyewoIe',
-        numberOfClasses: '2 classes',
-        status: 'Active',
-        activity: 'Seen today',
-    },
-    {
-        name: 'Bolaji OyewoIe',
-        numberOfClasses: '2 classes',
-        status: 'Active',
-        activity: 'Seen today',
-    },
-];
+const Page = () => {
+    const [teacherCount, setTeacherCount] = useState(0);
+    const [teachers, setTeachers] = useState([]);
 
-const topSection = [
-    { icon: Users2, text: 'Team weight', size: '4 teachers' },
-    { icon: BookOpen, text: 'Enrolled classes', size: '6 classes' },
-    { icon: DollarSign, text: 'Subscription', size: 'Basic plan' },
-]
+    useEffect(() => {
+        const fetchTeachers = async () => {
+            try {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/all`);
+                setTeachers(res.data.teachers);
+                setTeacherCount(res.data.count);
 
-const page = () => {
+            } catch (error) {
+                console.error('Failed to fetch teachers:', error);
+            }
+        };
+
+        fetchTeachers();
+    }, []);
+
+    const topSection = [
+        { icon: Users2, text: 'Team weight', size: `${teacherCount} teacher${teacherCount !== 1 ? 's' : ''}` },
+        { icon: BookOpen, text: 'Enrolled classes', size: '6 classes' },
+        { icon: DollarSign, text: 'Subscription', size: 'Basic plan' },
+    ]
 
     return (
         <div className='flex flex-col gap-10 p-8'>
@@ -95,27 +81,41 @@ const page = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {teachers.map((teacher, index) => (
+                                {teachers.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="text-center py-6">
+                                            No teachers available.
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    teachers.map((teacher: any, index: number) => (
                                     <TableRow key={index}>
                                         <TableCell className='px-8 py-4'>{teacher.name}</TableCell>
-                                        <TableCell>{teacher.numberOfClasses}</TableCell>
                                         <TableCell>
-                                            <span className="inline-flex items-center gap-1">
-                                                <span className="w-2 h-2 rounded-full bg-green-500" />
-                                                <span className="text-green-700 text-sm">{teacher.status}</span>
-                                            </span>
+                                            {teacher.classes?.length || 0} class{teacher.classes?.length !== 1 ? 'es' : ''}
                                         </TableCell>
-                                        <TableCell>{teacher.activity}</TableCell>
+                                        <TableCell>
+                                        <span className={`inline-flex items-center gap-1`}>
+                                            <span className={`w-2 h-2 rounded-full ${teacher.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
+                                            <span className={`text-sm ${teacher.status === 'active' ? 'text-green-700' : 'text-red-700'}`}>
+                                            {teacher.status.charAt(0).toUpperCase() + teacher.status.slice(1)}
+                                            </span>
+                                        </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            {teacher.lastLogin ? (teacher.lastLogin).toLocaleString() : "No activity yet"}
+                                        </TableCell>
                                         <TableCell className='pr-8 py-4 text-right'>
                                             <Link 
-                                                href={`/principal/teachers/${index}`} 
+                                                href={`/principal/teachers/${teacher._id}`} 
                                                 className="text-[#6C5CE7] text-sm font-medium"
                                             >
                                                 View
                                             </Link>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                    ))
+                                )}
                             </TableBody>
                         </Table>
                     </div>
@@ -125,4 +125,4 @@ const page = () => {
     )
 }
 
-export default page;
+export default Page;

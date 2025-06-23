@@ -14,29 +14,33 @@ export interface ITeacher extends Document {
   password: string;
   teacherId: string;
   userRole: 'teacher';
+  status: string;
   image?: string;
   classes: IStudent[];
+  lastLogin: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const TeacherSchema: Schema<ITeacher> = new Schema({
-    name: { type: String, required: true },
-    DOB: { type: String, required: true },
-    discipline: { type: String, required: true },
-    certification: { type: String, required: true },
-    password: { type: String, required: true, minlength: 6 },
-    teacherId: { type: String, required: true, unique: true },
-    userRole: { type: String, default: 'teacher' },
-    image: { 
-        type: String, 
-        default: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D" 
-    },
-    classes: [
-        {
-            name: { type: String },
-            parentEmail: { type: String }
-        }
-    ]
+  name: { type: String, required: true },
+  DOB: { type: String, required: true },
+  discipline: { type: String, required: true },
+  certification: { type: String, required: true },
+  password: { type: String, required: true, minlength: 6 },
+  teacherId: { type: String, required: true, unique: true },
+  userRole: { type: String, default: 'teacher' },
+  status: { type: String, default: 'active' },
+  image: { 
+    type: String, 
+    default: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D" 
+  },
+  classes: [
+    {
+      name: { type: String },
+      parentEmail: { type: String }
+    }
+  ],
+  lastLogin: { type: Date }
 }, { timestamps: true });
 
 // Hash password before saving
