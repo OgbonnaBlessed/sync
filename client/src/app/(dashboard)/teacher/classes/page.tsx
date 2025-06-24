@@ -37,7 +37,7 @@ const page = () => {
                         <h2 className="text-xl font-semibold">Classes</h2>
                         <div className='flex items-center gap-5'>
                             <Link
-                                href="/teacher/classes/createClass"
+                                href="/teacher/classes/createclass"
                                 className="text-black px-4 py-2 rounded-md text-sm transition-all border border-[#6C5CE7]"
                             >
                                 Create new class

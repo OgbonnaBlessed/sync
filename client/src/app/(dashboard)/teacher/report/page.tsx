@@ -5,7 +5,7 @@ const page = () => {
     return (
         <div className='flex flex-col gap-10 p-8'>
             <Header />
-            Teacher subscription
+            Teacher Report
         </div>
     )
 }
