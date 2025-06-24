@@ -66,7 +66,7 @@ const page = () => {
                                     <p>Last Report: {cls.lastReport}</p>
                                 </div>
                                 <Link
-                                    href={`/teacher/classes/classDetails/${index}`}
+                                    href={`/teacher/classes/${index}`}
                                     className="bg-[#6C5CE7] text-white px-4 py-2 rounded-md text-sm hover:bg-[#6C5CE7]/80 transition-all"
                                 >
                                     View details

@@ -85,7 +85,7 @@ const TeacherProfilePage = () => {
         <div className='flex flex-col gap-10 p-8'>
             <Header />
 
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-8'>
                 <h1 className="text-2xl font-semibold">Teacher&lsquo;s profile</h1>
 
                 <div className='flex gap-10 items-start'>

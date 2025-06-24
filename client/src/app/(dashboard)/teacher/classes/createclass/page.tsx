@@ -41,7 +41,7 @@ const Page = () => {
                         />
                     </div>
                     <Button
-                        className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5 mt-8'
+                        className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5 mt-5'
                         onClick={handleSubmit}
                         disabled={loading}
                     >
