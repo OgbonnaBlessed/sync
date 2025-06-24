@@ -76,7 +76,7 @@ const Page = () => {
                                         No active teachers available.
                                     </TableCell>
                                 </TableRow>
-                            ): (
+                            ) : (
                                 students.map((student: any, index: number) => (
                                     <TableRow key={index}>
                                         <TableCell className='px-8 py-4'>{student.name}</TableCell>

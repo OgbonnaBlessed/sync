@@ -45,7 +45,7 @@ const Page = () => {
                         onClick={handleSubmit}
                         disabled={loading}
                     >
-                        {loading ? 'Creating account...' : 'Create account'}
+                        {loading ? 'Creating class...' : 'Create class'}
                     </Button>
                 </div>
             </div>

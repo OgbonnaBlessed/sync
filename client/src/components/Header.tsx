@@ -56,9 +56,9 @@ const Header = () => {
             </div>
 
             <div className='flex items-center gap-3'>
-                <div className='relative'>
+                <div className='relative bg-gray-300 p-1 rounded-full'>
                     <Bell className='p-1' fill='#000'/>
-                    <span className='absolute w-1.5 h-1.5 bg-red-500 top-0 right-1 rounded-full'></span>
+                    <span className='absolute w-1.5 h-1.5 bg-red-500 top-[5px] right-[7px] rounded-full'></span>
                 </div>
                 <div className='flex items-center gap-5'>
                     <div 
