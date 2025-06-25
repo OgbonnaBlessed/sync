@@ -6,6 +6,7 @@ import axios from 'axios'
 import { BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner';
 
 const Page = () => {
     const [classes, setClasses] = useState<any[]>([]);
@@ -22,9 +23,11 @@ const Page = () => {
                 .then((res) => {
                     setClasses(res.data.classes || []);
                     setClassCount(res.data.count);
+                    toast.success(res?.data?.message);
                 })
                 .catch((err) => {
                     console.error('Failed to fetch classes:', err);
+                    toast.error('Failed to fetch classes');
                 })
                 .finally(() => setLoading(false));
         }
@@ -61,12 +64,6 @@ const Page = () => {
                             >
                                 Create new class
                             </Link>
-                            <Link
-                                href="#"
-                                className="bg-[#6C5CE7] text-white px-4 py-2 rounded-md text-sm hover:bg-[#6C5CE7]/80 transition-all"
-                            >
-                                Open all classes
-                            </Link>
                         </div>
                     </div>
 
@@ -85,7 +82,7 @@ const Page = () => {
                                         <div className='flex items-center justify-between w-full font-medium'>
                                             <h3 className='uppercase'>{cls.className}</h3>
                                         </div>
-                                        <p>Student: {cls.students?.length || 0}</p>
+                                        <p>Students: {cls.students?.length || 0}</p>
                                         <p>Last Report: {cls.lastReportDate 
                                                 ? new Date(cls.lastReportDate).toLocaleDateString() 
                                                 : 'No report yet'}

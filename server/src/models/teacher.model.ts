@@ -57,7 +57,7 @@ const TeacherSchema: Schema<ITeacher> = new Schema({
   userRole: { type: String, default: 'teacher' },
   gender: { type: String, required: true },
   status: { type: String, default: 'active' },
-  image: { type: String },
+  image: { type: String, required: true },
   classes: [ClassSchema],
   lastLogin: { type: Date }
 }, { timestamps: true });

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Eye, EyeClosed } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,9 +24,9 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
+import { toast } from "sonner";
 
 const Page = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -38,8 +38,6 @@ const Page = () => {
         teacherId: '',
         password: ''
     })
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { setAuthUser } = useAuth();
@@ -49,18 +47,24 @@ const Page = () => {
         setPasswordVisible(!passwordVisible);
     }
 
-    const handleLogin = async () => {
-        setLoading(true);
-        setError('');
-        setSuccess('');
+    const isValidEmail = (email: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
 
+    const handleLogin = async () => {
         if (!formData.email || !formData.password) {
-            setError('Please fill in all fields.');
-            setLoading(false);
+            toast.error('Please fill in all fields.');
+            return;
+        }
+
+        if (!isValidEmail(formData.email)) {
+            toast.error("Please enter a valid email address.");
             return;
         }
 
         try {
+            setLoading(true);
+
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, formData);
 
             // Save token in localStorage or cookie
@@ -89,24 +93,31 @@ const Page = () => {
                 userRole: response.data.user.userRole,
             });
 
-            setSuccess('Login successful!');
+            toast.success('Login successful!');
             setTimeout(() => {
                 router.push('/');
             }, 2000);
 
+            setLoading(false);
+
         } catch (err: any) {
-            setError(err?.response?.data?.message || 'Login failed. Try again.');
+            toast.error(err?.response?.data?.message || 'Login failed. Try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleTeacherLogin = async () => {
-        setLoading(true);
-        setError('');
-        setSuccess('');
+    const handleTeacherLogin = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
 
+        if (!teacherFormData.teacherId || !teacherFormData.password) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+        
         try {
+            setLoading(true);
+
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/login`, teacherFormData);
 
             localStorage.setItem('loginToken', response.data.token);
@@ -130,27 +141,16 @@ const Page = () => {
                 userRole: response.data.teacher.userRole,
             });
 
-            setSuccess('Login successful!');
+            toast.success('Login successful!');
             setTimeout(() => {
                 router.push('/');
             }, 2000);
         } catch (err: any) {
-            setError(err?.response?.data?.message || 'Login failed. Try again.');
+            toast.error(err?.response?.data?.message || 'Login failed. Try again.');
         } finally {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (error || success) {
-            const timeout = setTimeout(() => {
-                setError('');
-                setSuccess('');
-            }, 3000);
-
-            return () => clearTimeout(timeout);
-        }
-    }, [error, success]);
 
     return (
         <div className='w-full h-full'>
@@ -225,21 +225,6 @@ const Page = () => {
                                         </div>
                                     </CardFooter>
                                 </div>
-                                <AnimatePresence mode="wait">
-                                    {(error || success) && (
-                                        <motion.div 
-                                            key={error ? 'error' : 'success'}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 1, y: 20 }}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            className='absolute bottom-5'
-                                        >
-                                            {error && <p className="text-red-500 text-sm">{error}</p>}
-                                            {success && <p className="text-green-600 text-sm">{success}</p>}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
                             </Card>
                             <div className='relative w-[35rem] overflow-hidden rounded-3xl'>
                                 <div className='h-full'>
@@ -307,21 +292,6 @@ const Page = () => {
                                         </Button>
                                     </CardFooter>
                                 </div>
-                                <AnimatePresence mode="wait">
-                                    {(error || success) && (
-                                        <motion.div 
-                                            key={error ? 'error' : 'success'}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 1, y: 20 }}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            className='absolute bottom-5'
-                                        >
-                                            {error && <p className="text-red-500 text-sm">{error}</p>}
-                                            {success && <p className="text-green-600 text-sm">{success}</p>}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
                             </Card>
                             <div className='relative w-[35rem] overflow-hidden rounded-3xl'>
                                 <div className='h-full'>

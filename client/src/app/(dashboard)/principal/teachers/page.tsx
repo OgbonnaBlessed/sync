@@ -13,12 +13,13 @@ import {
 } from "@/components/ui/table";
 import Link from 'next/link';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const Page = () => {
     const [activeTeachers, setActiveTeachers] = useState([]);
     const [deactivatedTeachers, setDeactivatedTeachers] = useState([]);
 
-        useEffect(() => {
+    useEffect(() => {
         const fetchTeachers = async () => {
             try {
                 const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/all`);
@@ -26,14 +27,36 @@ const Page = () => {
                 const _deactivatedTeachers = res.data.teachers.filter((t: any) => t.status === 'inactive');
                 setActiveTeachers(_activeTeachers);
                 setDeactivatedTeachers(_deactivatedTeachers);
+                toast.success(res.data?.message);
                 
             } catch (error) {
                 console.error('Failed to fetch teachers:', error);
+                toast.error("Failed to fetch teachers");
             }
         };
 
         fetchTeachers();
     }, []);
+
+    const formatLastSeen = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+
+        const isToday = date.toDateString() === now.toDateString();
+
+        const yesterday = new Date();
+        yesterday.setDate(now.getDate() - 1);
+        const isYesterday = date.toDateString() === yesterday.toDateString();
+
+        if (isToday) return "Seen today";
+        if (isYesterday) return "Seen yesterday";
+
+        return `Seen ${date.toLocaleDateString(undefined, {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        })}`;
+    };
 
     return (
         <div className='flex flex-col gap-10 p-8'>
@@ -82,7 +105,7 @@ const Page = () => {
                                                 </span>
                                             </TableCell>
                                             <TableCell>
-                                                {teacher.lastLogin ? (teacher.lastLogin).toLocaleString() : "No activity yet"}
+                                                {teacher.lastLogin ? formatLastSeen(teacher.lastLogin).toLocaleString() : "No activity yet"}
                                             </TableCell>
                                             <TableCell className='pr-8 py-4 text-right'>
                                                 <Link 

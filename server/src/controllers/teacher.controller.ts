@@ -44,7 +44,7 @@ export const registerTeacher = async (req: Request, res: Response): Promise<void
         const token = generateToken(teacher._id);
 
         res.status(201).json({
-            message: 'Teacher created successfully.',
+            message: 'Teacher created successfully',
             teacher: {
                 id: teacher._id,
                 name: teacher.name,
@@ -100,7 +100,7 @@ export const loginTeacher = async (req: Request, res: Response): Promise<void> =
 export const getAllTeachers = async (req: Request, res: Response) => {
     try {
         const teachers = await Teacher.find();
-        res.status(200).json({ count: teachers.length, teachers });
+        res.status(200).json({ count: teachers.length, teachers, message: "Fetched all teachers successfully" });
         
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch teachers", error });
@@ -136,7 +136,7 @@ export const getTeacherById = async (req: Request, res: Response): Promise<void>
             return;
         }
 
-        res.status(200).json({ teacher });
+        res.status(200).json({ teacher, message: "Teacher fetched successfully" });
 
     } catch (error) {
         res.status(500).json({ message: "Server error", error });

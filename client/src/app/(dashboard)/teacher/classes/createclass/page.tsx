@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const Page = () => {
     const [formData, setFormData] = useState({ className: '' });

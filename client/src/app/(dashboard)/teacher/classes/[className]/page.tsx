@@ -10,7 +10,7 @@ import { Send } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const Page = () => {
     const { className } = useParams();
@@ -20,6 +20,7 @@ const Page = () => {
     const [sentIndexes, setSentIndexes] = useState<number[]>([]);
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [sendingMail, setSendingMail] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('userInfo');
@@ -53,6 +54,7 @@ const Page = () => {
         if (!reportText) return toast.error("Please enter a report");
 
         try {
+            setSendingMail(true);
             await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/class/${teacherId}/classes/${className}/students/${student.parentEmail}/report`,
                 { report: reportText }
@@ -61,9 +63,12 @@ const Page = () => {
             setSentIndexes(prev => [...prev, index]);
             setActiveIndex(null);
             toast.success("Report sent!");
+            setSendingMail(false);
+
         } catch (error) {
             console.error(error);
             toast.error("Failed to send report");
+            setSendingMail(false);
         }
     };
 
@@ -147,7 +152,12 @@ const Page = () => {
                                                             className="min-h-[100px]"
                                                         />
                                                         <button
-                                                            className="self-end text-[#6C5CE7] hover:text-[#4b3bc7] flex items-center gap-1"
+                                                            className={`self-end flex items-center gap-1 
+                                                                ${sendingMail 
+                                                                    ? 'cursor-not-allowed text-gray-500 hover:text-gray-600' 
+                                                                    : 'cursor-pointer text-[#6C5CE7] hover:text-[#4b3bc7]'}`
+                                                                }
+                                                            disabled={sendingMail}
                                                             onClick={() => sendReport(student, index)}
                                                         >
                                                             <Send className="h-4 w-4" /> Send

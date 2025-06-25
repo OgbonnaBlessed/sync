@@ -11,6 +11,7 @@ import { ChevronDown, Eye, EyeClosed } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
 import axios from 'axios'
+import { toast } from 'sonner'
 
 const TeacherProfilePage = () => {
     const { teacherId } = useParams();
@@ -24,10 +25,12 @@ const TeacherProfilePage = () => {
         const fetchTeacher = async () => {
             try {
                 const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/${teacherId}`)
-                setTeacher(res.data.teacher)
+                setTeacher(res.data.teacher);
+                toast.success(res.data?.message);
 
             } catch (error) {
                 console.error('Error fetching teacher:', error)
+                toast.error("Error fetching teacher");
 
             } finally {
                 setLoading(false)
@@ -41,9 +44,11 @@ const TeacherProfilePage = () => {
         try {
             const res = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/toggle-status/${teacherId}`)
             setTeacher(res.data.teacher)
+            toast.success(res.data?.message);
 
         } catch (error) {
-            console.error('Failed to toggle status:', error)
+            console.error('Failed to toggle status:', error);
+            toast.error("Failed to toggle status");
         }
     }
 
@@ -104,7 +109,7 @@ const TeacherProfilePage = () => {
                             <h2 className='font-semibold text-xl'>{teacher.name}</h2>
                             <p className='text-sm text-gray-500'>{teacher.gender || "not specified"}</p>
                         </div>
-                        <div>Status: {teacher.status} {teacher.lastLogin === undefined ? '' : `since ${teacher.lastLogin}`}</div>
+                        <div>Status: {teacher.status}</div>
                         <div>Enrolled classes:  {teacher.classes?.length || 0}</div>
                         <div className="grid gap-2 max-w-[15rem]">
                             <Label htmlFor="password" className='text-sm font-semibold'>Password</Label>

@@ -11,6 +11,7 @@ import React, { useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const AddTeacher = () => {
     const [formData, setFormData] = useState({
@@ -38,14 +39,30 @@ const AddTeacher = () => {
         setFormData({ ...formData, id });
     };
 
+    const formatDOB = (input: string): string => {
+        const date = new Date(input);
+        if (isNaN(date.getTime())) return input; // fallback if invalid
+
+        const day = date.getDate();
+        const suffix =
+            day === 1 || day === 21 || day === 31 ? 'st' :
+            day === 2 || day === 22 ? 'nd' :
+            day === 3 || day === 23 ? 'rd' :
+            'th';
+
+        const formatted = `${day}${suffix} ${date.toLocaleString('default', { month: 'long' })}, ${date.getFullYear()}`;
+        return formatted;
+    };
+
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        setLoading(true);
-
+        
         try {
+            setLoading(true);
+
             const formPayload = new FormData();
             formPayload.append('name', formData.name);
-            formPayload.append('DOB', formData.DOB);
+            formPayload.append('DOB', formatDOB(formData.DOB));
             formPayload.append('discipline', formData.discipline);
             formPayload.append('certification', formData.certification);
             formPayload.append('password', formData.password);
@@ -64,9 +81,8 @@ const AddTeacher = () => {
                     },
                 }
             );
-            console.log(response);
+            toast.success(response.data?.message);
 
-            alert('Teacher added successfully.');
             setFormData({
                 name: '',
                 DOB: '',
@@ -77,13 +93,15 @@ const AddTeacher = () => {
                 gender: '',
             });
             setImageFile(null);
+            setLoading(false);
+
             setTimeout(() => {
                 router.push('/principal/teachers')
             }, 2000);
 
         } catch (error: any) {
             console.error(error);
-            alert(error.response?.data?.message || 'Something went wrong');
+            toast.error(error.response?.data?.message || 'Something went wrong');
         } finally {
             setLoading(false);
         }
@@ -152,6 +170,7 @@ const AddTeacher = () => {
                         <Label htmlFor="DOB">Date of Birth</Label>
                         <Input 
                             id="DOB" 
+                            type="date"
                             placeholder="Enter teacher's date of birth" 
                             value={formData.DOB}
                             onChange={(e) => setFormData({ ...formData, DOB: e.target.value })}

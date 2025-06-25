@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Eye, EyeClosed } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,8 +22,8 @@ import {
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
 const Page = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -35,8 +35,6 @@ const Page = () => {
         password: ''
     });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const router = useRouter();
 
     const togglePasswordVisibility = (e: { preventDefault: () => void }) => {
@@ -44,15 +42,29 @@ const Page = () => {
         setPasswordVisible(!passwordVisible);
     }
 
-    const handleSignup = async () => {
-        setError('');
-        setSuccess('');
-        setLoading(true);
+    const isValidEmail = (email: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
 
+    const handleSignup = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        
+        if (!formData.name || !formData.email || !formData.schoolName || !formData.schoolLocation || !formData.password) {
+            toast.error("Please fill all fields");
+            return;
+        }
+
+        if (!isValidEmail(formData.email)) {
+            toast.error("Please enter a valid email address");
+            return;
+        }
+        
         try {
+            setLoading(true);
+
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, formData);
 
-            setSuccess('Account created successfully!');
+            toast.success('Account created successfully!');
             
             // Optional: Save token if returned
             localStorage.setItem('token', response.data.token);
@@ -62,27 +74,19 @@ const Page = () => {
                 router.push('/login');
             }, 2000);
 
+            setLoading(false);
+
         } catch (err: any) {
             if (err.response && err.response.data && err.response.data.message) {
-                setError(err.response.data.message);
+                toast.error(err.response.data.message);
             } else {
-                setError('Something went wrong');
+                toast.error('Something went wrong');
             }
+
         } finally {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (error || success) {
-            const timeout = setTimeout(() => {
-                setError('');
-                setSuccess('');
-            }, 3000);
-
-            return () => clearTimeout(timeout);
-        }
-    }, [error, success]);
 
     return (
         <div className='w-full h-full'>
@@ -181,22 +185,6 @@ const Page = () => {
                                         </div>
                                     </CardFooter>
                                 </div>
-
-                                <AnimatePresence mode="wait">
-                                    {(error || success) && (
-                                        <motion.div 
-                                            key={error ? 'error' : 'success'}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 1, y: 20 }}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            className='absolute bottom-0'
-                                        >
-                                            {error && <p className="text-red-500 text-sm">{error}</p>}
-                                            {success && <p className="text-green-600 text-sm">{success}</p>}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
                             </Card>
                             <div className='relative w-[35rem] overflow-hidden rounded-3xl'>
                                 <div className='h-full'>
@@ -211,8 +199,6 @@ const Page = () => {
                     </TabsContent>
                 </Tabs>
             </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            {success && <p className="text-green-600 text-sm">{success}</p>}
         </div>
     )
 }

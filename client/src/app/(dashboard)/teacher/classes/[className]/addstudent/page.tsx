@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const Page = () => {
     const { className } = useParams();
@@ -28,8 +28,23 @@ const Page = () => {
         }
     }, []);
 
+    const isValidEmail = (email: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
     const handleSubmit = async(e: { preventDefault: () => void }) => {
         e.preventDefault();
+
+        if (!formData.name || !formData.email) {
+            toast.error("Please fill in all fields.");
+            return;
+        }
+
+        if (!isValidEmail(formData.email)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
         setLoading(true);
         
         try {
@@ -78,6 +93,7 @@ const Page = () => {
                         <Label htmlFor="email">Parent&lsquo;s email</Label>
                         <Input 
                             id="email" 
+                            type="email"
                             placeholder="Enter parent's mail" 
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}

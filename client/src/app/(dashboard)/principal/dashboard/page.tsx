@@ -14,9 +14,11 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import { BookOpen, DollarSign, Users2 } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const Page = () => {
     const [teacherCount, setTeacherCount] = useState(0);
+    const [totalClasses, setTotalClasses] = useState(0);
     const [teachers, setTeachers] = useState([]);
 
     useEffect(() => {
@@ -26,18 +28,45 @@ const Page = () => {
                 const activeTeachers = res.data.teachers.filter((t: any) => t.status === 'active');
                 setTeachers(activeTeachers);
                 setTeacherCount(activeTeachers.length);
+
+                const allClasses = activeTeachers.reduce((sum: number, teacher: any) => {
+                    return sum + (teacher.classes?.length || 0);
+                }, 0);
+                setTotalClasses(allClasses);
+                toast.success(res.data?.message);
                 
             } catch (error) {
                 console.error('Failed to fetch teachers:', error);
+                toast.error("Failed to fetch teachers");
             }
         };
 
         fetchTeachers();
     }, []);
 
+    const formatLastSeen = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+
+        const isToday = date.toDateString() === now.toDateString();
+
+        const yesterday = new Date();
+        yesterday.setDate(now.getDate() - 1);
+        const isYesterday = date.toDateString() === yesterday.toDateString();
+
+        if (isToday) return "Seen today";
+        if (isYesterday) return "Seen yesterday";
+
+        return `Seen ${date.toLocaleDateString(undefined, {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        })}`;
+    };
+
     const topSection = [
         { icon: Users2, text: 'Team weight', size: `${teacherCount} teacher${teacherCount !== 1 ? 's' : ''}` },
-        { icon: BookOpen, text: 'Enrolled classes', size: '6 classes' },
+        { icon: BookOpen, text: 'Enrolled classes', size: `${totalClasses} class${totalClasses !== 1 ? 'es' : ''}` },
         { icon: DollarSign, text: 'Subscription', size: 'Basic plan' },
     ]
 
@@ -99,12 +128,12 @@ const Page = () => {
                                             <span className={`inline-flex items-center gap-1`}>
                                                 <span className={`w-2 h-2 rounded-full ${teacher.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
                                                 <span className={`text-sm ${teacher.status === 'active' ? 'text-green-700' : 'text-red-700'}`}>
-                                                {teacher.status.charAt(0).toUpperCase() + teacher.status.slice(1)}
+                                                {teacher.status}
                                                 </span>
                                             </span>
                                             </TableCell>
                                             <TableCell>
-                                                {teacher.lastLogin ? (teacher.lastLogin).toLocaleString() : "No activity yet"}
+                                                {teacher.lastLogin ? formatLastSeen(teacher.lastLogin).toLocaleString() : "No activity yet"}
                                             </TableCell>
                                             <TableCell className='pr-8 py-4 text-right'>
                                                 <Link 

@@ -119,7 +119,7 @@ export const getTeacherClasses = async (req: Request, res: Response): Promise<vo
 
         const classes = teacher.classes || [];
         res.status(200).json({
-            message: 'Classes fetched successfully.',
+            message: 'Classes fetched successfully',
             count: classes.length,
             classes,
         });
