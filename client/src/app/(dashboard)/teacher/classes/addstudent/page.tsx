@@ -9,7 +9,6 @@ import React, { useState } from 'react'
 const Page = () => {
     const [formData, setFormData] = useState({
         name: '',
-        matric: '',
         email: '',
     })
     const [loading, setLoading] = useState(false);
@@ -36,15 +35,6 @@ const Page = () => {
                         />
                     </div>
                     <div className="grid gap-2 w-full">
-                        <Label htmlFor="matric">Student&lsquo;s matric number</Label>
-                        <Input 
-                            id="matric" 
-                            placeholder="Enter student's matric number" 
-                            value={formData.matric}
-                            onChange={(e) => setFormData({ ...formData, matric: e.target.value })}
-                        />
-                    </div>
-                    <div className="grid gap-2 w-full">
                         <Label htmlFor="email">Parent&lsquo;s email</Label>
                         <Input 
                             id="email" 
@@ -58,7 +48,7 @@ const Page = () => {
                         onClick={handleSubmit}
                         disabled={loading}
                     >
-                        {loading ? 'Creating student...' : 'Create student'}
+                        {loading ? 'Adding student...' : 'Add student'}
                     </Button>
                 </div>
             </div>

@@ -1,23 +1,42 @@
-import Header from '@/components/Header'
-import { EthernetPort } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
+'use client';
 
-const page = () => {
-    const classes = [
-        {
-            subject: "Basic Science",
-            students: "3D students",
-            lastReport: "20th June, 2025",
-            class: "JS1"
-        },
-        {
-            subject: "Basic Science",
-            students: "3D students",
-            lastReport: "20th June, 2025",
-            class: "JS1"
-        },
-    ]
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Header from '@/components/Header'
+import axios from 'axios'
+import { BookOpen } from 'lucide-react'
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+
+const Page = () => {
+    const [classes, setClasses] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [classCount, setClassCount] = useState(0);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('userInfo');
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+        const id = parsedUser?.user?.teacherId;
+
+        if (id) {
+            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/class/${id}/classes`)
+                .then((res) => {
+                    setClasses(res.data.classes || []);
+                    setClassCount(res.data.count);
+                })
+                .catch((err) => {
+                    console.error('Failed to fetch classes:', err);
+                })
+                .finally(() => setLoading(false));
+        }
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <p>Loading...</p>
+            </div>
+        )
+    }
 
     return (
         <div className='flex flex-col gap-10 p-8'>
@@ -26,10 +45,10 @@ const page = () => {
             <div className='flex flex-col gap-12'>
                 <div className='border rounded-lg p-5 flex flex-col gap-2 text-sm w-fit'>
                     <div className='flex items-center gap-2 text-gray-500'>
-                        <span><EthernetPort className='p-1' /></span>
+                        <span><BookOpen className='p-1' /></span>
                         <p>Enrolled Classes</p>
                     </div>
-                    <h2>2 classes</h2>
+                    <h2>{classCount} class{classCount != 1 ? 'es' : ''}</h2>
                 </div>
 
                 <div className='flex flex-col border rounded-lg'>
@@ -51,33 +70,41 @@ const page = () => {
                         </div>
                     </div>
 
-                    <div className="w-full flex flex-col gap-5 px-8 py-5">
-                        {classes.map((cls, index) => (
-                            <div 
-                                key={index}
-                                className='w-full flex justify-between items-start rounded-lg border p-5'
-                            >
-                                <div className='flex flex-col gap-2 w-64'>
-                                    <div className='flex items-center justify-between w-full font-medium'>
-                                        <h3>{cls.subject}</h3>
-                                        <h3>{cls.class}</h3>
-                                    </div>
-                                    <p>Student: {cls.students}</p>
-                                    <p>Last Report: {cls.lastReport}</p>
-                                </div>
-                                <Link
-                                    href={`/teacher/classes/${index}`}
-                                    className="bg-[#6C5CE7] text-white px-4 py-2 rounded-md text-sm hover:bg-[#6C5CE7]/80 transition-all"
+                    {classes.length === 0 ? (
+                        <div className='w-full h-20 py-5 flex justify-center items-center'>
+                            <p>You have no class yet.</p>
+                        </div>
+                    ) : (
+                        <div className="w-full flex flex-col gap-5 px-8 py-5">
+                            {classes.map((cls, index) => (
+                                <div 
+                                    key={index}
+                                    className='w-full flex justify-between items-start rounded-lg border p-5'
                                 >
-                                    View details
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
+                                    <div className='flex flex-col gap-2 w-64'>
+                                        <div className='flex items-center justify-between w-full font-medium'>
+                                            <h3 className='uppercase'>{cls.className}</h3>
+                                        </div>
+                                        <p>Student: {cls.students?.length || 0}</p>
+                                        <p>Last Report: {cls.lastReportDate 
+                                                ? new Date(cls.lastReportDate).toLocaleDateString() 
+                                                : 'No report yet'}
+                                        </p>
+                                    </div>
+                                    <Link
+                                        href={`/teacher/classes/${cls.className}`}
+                                        className="bg-[#6C5CE7] text-white px-4 py-2 rounded-md text-sm hover:bg-[#6C5CE7]/80 transition-all"
+                                    >
+                                        View details
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
     )
 }
 
-export default page
+export default Page

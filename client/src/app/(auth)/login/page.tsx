@@ -26,6 +26,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/app/context/AuthContext';
+import Image from 'next/image';
 
 const Page = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -138,7 +139,7 @@ const Page = () => {
         } finally {
             setLoading(false);
         }
-        };
+    };
 
     useEffect(() => {
         if (error || success) {
@@ -154,14 +155,8 @@ const Page = () => {
     return (
         <div className='w-full h-full'>
             <div className='bg-white/20 w-full backdrop-blur-sm fixed z-50 flex justify-between px-20 py-5'>
-                <Link
-                    href="/"
-                >
-                    <img 
-                        src="/Logo.png"
-                        alt="Logo"
-                        className='w-[100px] h-[60px] object-contain'
-                    />
+                <Link href="/">
+                    <Image src='/Logo.png' alt='Logo' width={100} height={60} />
                 </Link>
             </div>
             <div className='h-full w-full flex items-center justify-center py-32 px-20'>
@@ -217,7 +212,7 @@ const Page = () => {
                                             onClick={handleLogin}
                                             disabled={loading}
                                         >
-                                            {loading ? 'Loging in' : 'Log in'}
+                                            {loading ? 'Loging in...' : 'Log in'}
                                         </Button>
                                         <div className='text-sm flex items-center gap-1'>
                                             <p>Don&lsquo;t have an account?</p>
@@ -308,7 +303,7 @@ const Page = () => {
                                             disabled={loading}
                                             className='w-full cursor-pointer bg-[#6C5CE7] hover:bg-[#6C5CE7]/80 transition-all duration-300 ease-in-out py-5'
                                         >
-                                            Log in
+                                            {loading ? 'Loging in...' : 'Log in'}
                                         </Button>
                                     </CardFooter>
                                 </div>

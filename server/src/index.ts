@@ -3,6 +3,7 @@ import cors from "cors";
 import connectDB from "./db/mongodb";
 import authRoutes from "./routes/auth.route";
 import teacherRoutes from "./routes/teacher.route";
+import classRoutes from "./routes/class.route"
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +15,7 @@ app.use(cors({
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/teacher", teacherRoutes);
+app.use("/api/class", classRoutes);
 
 app.get("/", (_req, res) => {
   res.send("Backend is working!");

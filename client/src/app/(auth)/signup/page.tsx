@@ -23,6 +23,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image';
 
 const Page = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -86,14 +87,8 @@ const Page = () => {
     return (
         <div className='w-full h-full'>
             <div className='bg-white/20 w-full backdrop-blur-sm fixed z-50 flex justify-between px-20 py-5'>
-                <Link
-                    href="/"
-                >
-                    <img 
-                        src="/Logo.png"
-                        alt="Logo"
-                        className='w-[100px] h-[60px] object-contain'
-                    />
+                <Link href="/">
+                    <Image src='/Logo.png' alt='Logo' width={100} height={60} />
                 </Link>
             </div>
             <div className='h-full w-full flex items-center justify-center py-32 px-20'>

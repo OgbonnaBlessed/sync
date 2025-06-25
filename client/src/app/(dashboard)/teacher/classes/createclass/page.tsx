@@ -1,19 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Header from '@/components/Header'
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import React, { useState } from 'react'
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
 
 const Page = () => {
-    const [formData, setFormData] = useState({ className: '', classLevel: '' });
+    const [formData, setFormData] = useState({ className: '' });
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState<any>(null);
+    const router = useRouter();
+    
+    useEffect(() => {
+        const storedUser = localStorage.getItem('userInfo');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+        }
+    }, []);
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
         setLoading(true);
-    }
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/class/${user?.user?.teacherId}/classes`,
+                { className: formData.className }
+            );
+            toast.success(response.data.message);
+            setFormData({ className: '' }); // Reset form
+            setTimeout(() => {
+                router.push('/teacher/classes')
+            }, 2000);
+
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error.response?.data?.message || "Failed to create class.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className='flex flex-col gap-10 p-8 w-full'>
@@ -29,15 +61,6 @@ const Page = () => {
                             placeholder="Enter class name" 
                             value={formData.className}
                             onChange={(e) => setFormData({ ...formData, className: e.target.value })}
-                        />
-                    </div>
-                    <div className="grid gap-2 w-full">
-                        <Label htmlFor="classLevel">Class Level</Label>
-                        <Input 
-                            id="classLevel" 
-                            placeholder="Enter class level" 
-                            value={formData.classLevel}
-                            onChange={(e) => setFormData({ ...formData, classLevel: e.target.value })}
                         />
                     </div>
                     <Button
