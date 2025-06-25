@@ -10,7 +10,7 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    params: async (_req, file) => {
+    params: async (_req: any, file: any) => {
         return {
             folder: 'teachers',
             format: 'png', // or 'jpeg', depending on what you want
