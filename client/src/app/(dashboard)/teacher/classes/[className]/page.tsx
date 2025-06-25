@@ -14,7 +14,6 @@ import { toast } from 'react-toastify';
 
 const Page = () => {
     const { className } = useParams();
-    console.log(className);
     const [teacherId, setTeacherId] = useState<any>(null);
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [reports, setReports] = useState<{ [key: number]: string }>({});
@@ -90,7 +89,7 @@ const Page = () => {
                         </div>
                     </div>
                     <Link 
-                        href="/principal/teachers/addstudent"
+                        href={`/teacher/classes/${className}/addstudent`}
                         className="bg-[#6C5CE7] text-white px-4 py-2 rounded-md text-sm hover:bg-[#6C5CE7]/80 transition-all"
                     >
                         + Add student

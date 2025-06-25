@@ -39,7 +39,12 @@ export const addStudentToClass = async (req: Request, res: Response): Promise<vo
         const { teacherId, className } = req.params;
         const { name, parentEmail } = req.body;
 
-        const teacher = await Teacher.findById(teacherId);
+        if (!name || !parentEmail) {
+            res.status(400).json({ message: 'Kindly provide student name and parent email' });
+            return;
+        }
+
+        const teacher = await Teacher.findOne({ teacherId });
         if (!teacher) {
             res.status(404).json({ message: 'Teacher not found.' });
             return;
