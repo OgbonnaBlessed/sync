@@ -9,6 +9,8 @@ const generateToken = (id: string) =>
   jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
 
 export const registerTeacher = async (req: Request, res: Response): Promise<void> => {
+    const file = (req as any).file;
+    
     try {
         const { name, DOB, discipline, certification, password, teacherId, gender } = req.body;
 
@@ -28,7 +30,7 @@ export const registerTeacher = async (req: Request, res: Response): Promise<void
             return;
         }
 
-        const imageUrl = req.file?.path;
+        const imageUrl = file?.path;
 
         const teacher = await Teacher.create({
             name,
