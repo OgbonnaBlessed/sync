@@ -10,6 +10,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const generateToken = (id) => jsonwebtoken_1.default.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 const registerTeacher = async (req, res) => {
+    const file = req.file;
     try {
         const { name, DOB, discipline, certification, password, teacherId, gender } = req.body;
         if (!name || !DOB || !discipline || !certification || !password) {
@@ -25,7 +26,7 @@ const registerTeacher = async (req, res) => {
             res.status(400).json({ message: 'Teacher ID already exists. Try again.' });
             return;
         }
-        const imageUrl = req.file?.path;
+        const imageUrl = file?.path;
         const teacher = await teacher_model_1.default.create({
             name,
             DOB,
