@@ -20,11 +20,19 @@ const Page = () => {
     const [teacherCount, setTeacherCount] = useState(0);
     const [totalClasses, setTotalClasses] = useState(0);
     const [teachers, setTeachers] = useState([]);
-
+    
     useEffect(() => {
         const fetchTeachers = async () => {
+            
+            const storedUser = localStorage.getItem('loginToken');
             try {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/all`);
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/my-teachers`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${storedUser}`
+                        }
+                    }
+                );
                 const activeTeachers = res.data.teachers.filter((t: any) => t.status === 'active');
                 setTeachers(activeTeachers);
                 setTeacherCount(activeTeachers.length);

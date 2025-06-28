@@ -21,8 +21,16 @@ const Page = () => {
 
     useEffect(() => {
         const fetchTeachers = async () => {
+            
+            const storedUser = localStorage.getItem('loginToken');
             try {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/all`);
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/teacher/my-teachers`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${storedUser}`
+                        }
+                    }
+                );
                 const _activeTeachers = res.data.teachers.filter((t: any) => t.status === 'active');
                 const _deactivatedTeachers = res.data.teachers.filter((t: any) => t.status === 'inactive');
                 setActiveTeachers(_activeTeachers);

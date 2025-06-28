@@ -72,12 +72,14 @@ const AddTeacher = () => {
                 formPayload.append('image', imageFile);
             }
 
+            const storedUser = localStorage.getItem('loginToken');
             const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/api/teacher/create`,
                 formPayload,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${storedUser}`
                     },
                 }
             );

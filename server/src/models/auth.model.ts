@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 import bcrypt from "bcryptjs";
 
 // Interface for TypeScript
@@ -9,47 +9,54 @@ export interface IUser extends Document {
   schoolLocation: string;
   password: string;
   userRole?: string;
+  teachers?: Types.ObjectId[];
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 // Schema definition
 const UserSchema: Schema<IUser> = new Schema(
-    {
-        name: {
-            type: String,
-            required: [true, "Name is required"],
-            trim: true,
-        },
-        email: {
-            type: String,
-            required: [true, "Email is required"],
-            unique: true,
-            lowercase: true,
-            trim: true,
-        },
-        schoolName: {
-            type: String,
-            required: [true, "School name is required"],
-            trim: true,
-        },
-        schoolLocation: {
-            type: String,
-            required: [true, "School location is required"],
-            trim: true,
-        },
-        password: {
-            type: String,
-            required: [true, "Password is required"],
-            minlength: 6,
-        },
-        userRole: {
-          type: String,
-          default: 'principal'
-        }
+  {
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+      trim: true,
     },
-    {
-        timestamps: true,
-    }
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    schoolName: {
+      type: String,
+      required: [true, "School name is required"],
+      trim: true,
+    },
+    schoolLocation: {
+      type: String,
+      required: [true, "School location is required"],
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: 6,
+    },
+    userRole: {
+      type: String,
+      default: 'principal'
+    },
+    teachers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Teacher",
+      }
+    ]
+  },
+  {
+    timestamps: true,
+  }
 );
 
 // Pre-save hook to hash password

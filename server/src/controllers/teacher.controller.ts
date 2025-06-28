@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Teacher from '../models/teacher.model';
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
+import User from '../models/auth.model';
 
 dotenv.config();
 
@@ -13,6 +14,12 @@ export const registerTeacher = async (req: Request, res: Response): Promise<void
     
     try {
         const { name, DOB, discipline, certification, password, teacherId, gender } = req.body;
+        const principalId = (req as any).user?.id;
+
+        if (!principalId) {
+            res.status(401).json({ message: "Unauthorized, principal id missing" });
+            return;
+        }
 
         if (!name || !DOB || !discipline || !certification || !password) {
             res.status(400).json({ message: 'All fields are required.' });
@@ -42,6 +49,10 @@ export const registerTeacher = async (req: Request, res: Response): Promise<void
             gender,
             image: imageUrl
         });
+
+        await User.findByIdAndUpdate(principalId, {
+            $push: { teachers: teacher._id }
+        })
 
         const token = generateToken(teacher._id);
 
@@ -106,6 +117,26 @@ export const getAllTeachers = async (req: Request, res: Response) => {
         
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch teachers", error });
+    }
+};
+
+export const getMyTeachers = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const principalId = (req as any).user?.id;
+        const principal = await User.findById(principalId).populate('teachers');
+
+        if (!principal) {
+            res.status(404).json({ message: 'Principal not found.' });
+            return;
+        }
+
+        res.status(200).json({
+            count: principal.teachers.length,
+            teachers: principal.teachers,
+            message: "Fetched your teachers successfully"
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to get teachers', error });
     }
 };
 
