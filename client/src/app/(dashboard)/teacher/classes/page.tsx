@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Header from '@/components/Header'
 import axios from 'axios'
-import { BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner';
@@ -11,7 +10,6 @@ import { toast } from 'sonner';
 const Page = () => {
     const [classes, setClasses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [classCount, setClassCount] = useState(0);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('userInfo');
@@ -22,7 +20,6 @@ const Page = () => {
             axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/class/${id}/classes`)
                 .then((res) => {
                     setClasses(res.data.classes || []);
-                    setClassCount(res.data.count);
                     toast.success(res?.data?.message);
                 })
                 .catch((err) => {
@@ -46,13 +43,7 @@ const Page = () => {
             <Header />
             
             <div className='flex flex-col gap-12'>
-                <div className='border rounded-lg p-5 flex flex-col gap-2 text-sm w-fit'>
-                    <div className='flex items-center gap-2 text-gray-500'>
-                        <span><BookOpen className='p-1' /></span>
-                        <p>Enrolled Classes</p>
-                    </div>
-                    <h2>{classCount} class{classCount != 1 ? 'es' : ''}</h2>
-                </div>
+                <h2 className="text-xl font-semibold">Classes</h2>
 
                 <div className='flex flex-col border rounded-lg'>
                     <div className="flex justify-between items-center border-b px-8 py-4">

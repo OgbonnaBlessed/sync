@@ -1,7 +1,7 @@
 import { usePathname } from 'next/navigation';
 import React from 'react'
 import { SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from './ui/sidebar';
-import { BookOpen, ClipboardList, DollarSign, LayoutDashboard, LogOut, PanelLeft, Settings, Users } from 'lucide-react';
+import { BookOpen, ClipboardList, DollarSign, LayoutDashboard, LogOut, PanelLeft, Users } from 'lucide-react';
 import { Sidebar } from './ui/sidebar';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -20,14 +20,12 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
         ? [
             { icon: LayoutDashboard, label: "Dashboard", href: "/principal/dashboard" },
             { icon: Users, label: "Teachers", href: "/principal/teachers" },
-            { icon: DollarSign, label: "Subscription", href: "/principal/subscription" },
-            { icon: Settings, label: "Settings", href: "/principal/settings" }
+            { icon: DollarSign, label: "Subscription", href: "/principal/subscription" }
         ]
         : [
             { icon: LayoutDashboard, label: "Dashboard", href: "/teacher/dashboard" },
             { icon: BookOpen, label: "Classes", href: "/teacher/classes" },
-            { icon: ClipboardList, label: "Report History", href: "/teacher/report" },
-            { icon: Settings, label: "Settings", href: "/teacher/settings" }
+            { icon: ClipboardList, label: "Report History", href: "/teacher/report" }
         ];
 
     const handleLogout = () => {
